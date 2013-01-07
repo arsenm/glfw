@@ -59,6 +59,8 @@
 
 // Define this to 1 if XRandR is available
 #cmakedefine _GLFW_HAS_XRANDR
+// Define this to 1 if Xinerama is available
+#cmakedefine _GLFW_HAS_XINERAMA
 // Define this to 1 if Xf86VidMode is available
 #cmakedefine _GLFW_HAS_XF86VIDMODE
 

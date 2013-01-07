@@ -48,6 +48,10 @@
  #include <X11/extensions/Xrandr.h>
 #endif
 
+#if defined(_GLFW_HAS_XINERAMA)
+ #include <X11/extensions/Xinerama.h>
+#endif
+
 // The Xkb extension provides improved keyboard support
 #if defined(_GLFW_HAS_XKB)
  #include <X11/XKBlib.h>
@@ -153,6 +157,14 @@ typedef struct _GLFWlibraryX11
         int         versionMinor;
         GLboolean   gammaBroken;
     } randr;
+
+    struct {
+        GLboolean   available;
+        int         eventBase;
+        int         errorBase;
+        int         versionMajor;
+        int         versionMinor;
+    } xinerama;
 
     struct {
         GLboolean   available;

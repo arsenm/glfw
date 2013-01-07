@@ -529,6 +529,27 @@ static GLboolean initDisplay(void)
     _glfw.x11.randr.available = GL_FALSE;
 #endif /*_GLFW_HAS_XRANDR*/
 
+#ifdef _GLFW_HAS_XINERAMA
+    _glfw.x11.xinerama.available =
+        XineramaQueryExtension(_glfw.x11.display,
+                               &_glfw.x11.xinerama.eventBase,
+                               &_glfw.x11.xinerama.errorBase);
+
+    if (_glfw.x11.xinerama.available)
+    {
+        if (!XineramaQueryVersion(_glfw.x11.display,
+                                  &_glfw.x11.randr.versionMajor,
+                                  &_glfw.x11.randr.versionMinor))
+        {
+            _glfwInputError(GLFW_PLATFORM_ERROR,
+                            "X11: Failed to query Xinerama version");
+            return GL_FALSE;
+        }
+    }
+#else
+    _glfw.x11.xinerama.available = GL_FALSE;
+#endif /* _GLFW_HAS_XINERAMA */
+
     // Check if Xkb is supported on this display
 #if defined(_GLFW_HAS_XKB)
     _glfw.x11.xkb.versionMajor = 1;

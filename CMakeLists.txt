@@ -133,17 +133,24 @@ if (_GLFW_X11)
 
     # Check for XRandR (modern resolution switching extension)
     if (X11_Xrandr_FOUND)
-        set(_GLFW_HAS_XRANDR 1) 
+        set(_GLFW_HAS_XRANDR 1)
         list(APPEND glfw_INCLUDE_DIRS ${X11_Xrandr_INCLUDE_PATH})
         list(APPEND glfw_LIBRARIES ${X11_Xrandr_LIB})
         set(GLFW_PKG_DEPS "${GLFW_PKG_DEPS} xrandr")
+    endif()
+
+    if (X11_Xinerama_FOUND)
+      set(_GLFW_HAS_XINERAMA 1)
+      list(APPEND glfw_INCLUDE_DIRS ${X11_Xinerama_INCLUDE_PATH})
+      list(APPEND glfw_LIBRARIES ${X11_Xinerama_LIB})
+      set(GLFW_PKG_DEPS "${GLFW_PKG_DEPS} xinerama")
     endif()
 
     # Check for Xf86VidMode (fallback legacy resolution switching extension)
     if (X11_xf86vmode_FOUND)
         set(_GLFW_HAS_XF86VIDMODE 1)
         list(APPEND glfw_INCLUDE_DIRS ${X11_xf86vmode_INCLUDE_PATH})
-    
+
         # NOTE: This is a workaround for CMake bug 0006976 (missing
         # X11_xf86vmode_LIB variable)
         if (X11_xf86vmode_LIB)

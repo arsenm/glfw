@@ -262,6 +262,49 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
         }
 #endif /*_GLFW_HAS_XRANDR*/
     }
+    else if (_glfw.x11.xinerama.available)
+    {
+#if defined (_GLFW_HAS_XINERAMA)
+        int i;
+        int number = 0;
+        int widthMM, heightMM;
+        XineramaScreenInfo* screenInfo;
+
+        screenInfo = XineramaQueryScreens(_glfw.x11.display, &number);
+        if (!screenInfo)
+        {
+            return NULL;
+        }
+
+        monitors = (_GLFWmonitor**) calloc(number, sizeof(_GLFWmonitor*));
+        if (!monitors)
+        {
+            XFree(screenInfo);
+            _glfwInputError(GLFW_OUT_OF_MEMORY, NULL);
+            return NULL;
+        }
+
+        for (i = 0; i < number; ++i)
+        {
+            widthMM = DisplayWidthMM(_glfw.x11.display, _glfw.x11.screen); /* TODO: Not sure */
+            heightMM = DisplayHeightMM(_glfw.x11.display, _glfw.x11.screen);
+
+            monitors[found] = _glfwCreateMonitor("",
+                                                 screenInfo[i].screen_number == 0, /* TODO: I have no idea */
+                                                 widthMM, heightMM,
+                                                 screenInfo[i].x_org, screenInfo[i].y_org);
+            if (!monitors[found])
+            {
+                XFree(screenInfo);
+                return NULL;
+            }
+
+            found++;
+        }
+
+        XFree(screenInfo);
+#endif /* _GLFW_HAS_XINERAMA */
+    }
 
     *count = found;
     return monitors;
